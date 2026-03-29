@@ -29,7 +29,6 @@ export function initCountdown(targetDateString, elementId) {
         }
     }
 
-    // 1초마다 업데이트 및 즉시 실행
-    setInterval(update, 1000);
-    update();
+    update(); // 1. 즉시 한 번 실행하여 숫자를 바로 채움
+    setInterval(update, 1000); // 2. 그 후 1초마다 반복
 }
