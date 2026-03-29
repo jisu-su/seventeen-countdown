@@ -26,5 +26,15 @@
         }
         
         /* 허브에서는 글씨 크기를 조금 줄여서 4개가 다 보이게 조절합니다 */
-        .member-card .countdown-display { font-size: 2.5rem; }
-        .member-card .timer-label { font-size: 1rem; }
+        /* 1. 멤버 이름(JEONGHAN, WOOZI 등) 크기 */
+        .member-card .timer-label { 
+            font-size: 1.5rem; /* 기존 1rem에서 1.5rem 정도로 키워보세요 */
+            margin-bottom: 15px; 
+            letter-spacing: 2px;
+        }
+
+        /* 2. 카운트다운 숫자(00d 00:00:00) 크기 */
+        .member-card .countdown-display { 
+            font-size: 4rem; /* 기존 2.5rem에서 4rem 정도로 키워보세요 */
+            font-weight: 800;
+        }
