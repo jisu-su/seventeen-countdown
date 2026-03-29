@@ -1,3 +1,6 @@
+/* packages/shared/style.css 맨 윗줄 */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css");
+
 :root {
     --rose-quartz: #F7C9CB;
     --serenity: #91A8D2;
