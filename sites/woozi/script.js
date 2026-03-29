@@ -1,3 +1,7 @@
+import { initCountdown } from '../../packages/shared/timer.js';
+
+// 멤버별로 날짜와 ID만 다르게 넣어주면 끝!
+initCountdown("March 14, 2027 00:00:00", "clock-woozi");
 // 1. 카운트다운 로직 (2027년 3월 14일 전역일 기준)
 const targetDate = new Date("March 14, 2027 00:00:00").getTime();
 

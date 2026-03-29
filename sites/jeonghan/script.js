@@ -1,3 +1,7 @@
+import { initCountdown } from '../../packages/shared/timer.js';
+
+// 멤버별로 날짜와 ID만 다르게 넣어주면 끝!
+initCountdown("June 25, 2026 00:00:00", "clock-jeonghan");
 // 1. 카운트다운 로직 (2026년 6월 25일 전역일 기준)
 const targetDate = new Date("June 25, 2026 00:00:00").getTime();
 

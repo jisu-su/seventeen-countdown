@@ -4,37 +4,7 @@
     <meta charset="UTF-8">
     <title>SEVENTEEN Discharge Countdown</title>
     <link rel="stylesheet" href="../../packages/shared/style.css">
-    <style>
-        /* 허브 페이지 전용: 2x2 그리드 레이아웃 설정 */
-        .hub-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* 가로를 똑같이 2칸으로 나눔 */
-            grid-template-rows: 1fr 1fr;    /* 세로를 똑같이 2칸으로 나눔 */
-            width: 100vw; 
-            height: 100vh;
-        }
-
-        /* 각 멤버별 카드(칸) 스타일 */
-        .member-card {
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            cursor: pointer; /* 마우스를 올리면 손가락 모양으로 변경 */
-            transition: transform 0.3s; /* 호버 효과를 부드럽게 */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* 마우스를 올렸을 때 살짝 커지고 배경이 밝아지는 효과 */
-        .member-card:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: scale(1.02);
-        }
-        
-        /* 허브에서는 글씨 크기를 조금 줄여서 4개가 다 보이게 조절합니다 */
-        .member-card .countdown-display { font-size: 2.5rem; }
-        .member-card .timer-label { font-size: 1rem; }
-    </style>
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
     <div class="main-bg"></div>
@@ -55,6 +25,8 @@
             <div class="timer-label">HOSHI</div>
             <div id="clock-hoshi" class="countdown-display">00d 00:00:00</div>
         </div>
-    </div> <script src="./script.js"></script>
+    </div> 
+
+    <script type="module" src="script.js"></script>
 </body>
 </html>
