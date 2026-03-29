@@ -35,6 +35,6 @@
 
         /* 2. 카운트다운 숫자(00d 00:00:00) 크기 */
         .member-card .countdown-display { 
-            font-size: 4rem; /* 기존 2.5rem에서 4rem 정도로 키워보세요 */
+            font-size: 3.5rem; /* 기존 2.5rem에서 4rem 정도로 키워보세요 */
             font-weight: 800;
         }
