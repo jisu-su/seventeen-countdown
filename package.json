@@ -1,0 +1,10 @@
+{
+  "name": "seventeen-countdown",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "sites/*",
+    "packages/*",
+    "workers/*"
+  ]
+}
