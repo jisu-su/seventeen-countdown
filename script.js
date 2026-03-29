@@ -1,5 +1,5 @@
 // apps/hub/script.js
-import { initCountdown } from '../../packages/shared/timer.js';
+import { initCountdown } from './packages/shared/timer.js';
 
 const members = [
     { id: 'jeonghan', date: "June 25, 2026 00:00:00" },
