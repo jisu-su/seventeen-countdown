@@ -91,6 +91,33 @@ export const CommentUI = {
     },
 
     /**
+     * 댓글 창(모달)의 가시성을 토글합니다.
+     */
+    toggleComments(forceClose = false) {
+        const fanPage = document.getElementById('fan-page');
+        const backdrop = document.getElementById('modal-backdrop');
+        
+        if (!fanPage) return;
+
+        const isOpening = !fanPage.classList.contains('active') && !forceClose;
+
+        if (isOpening) {
+            fanPage.classList.add('active');
+            if (backdrop) backdrop.classList.add('active');
+            // 열릴 때 최신 댓글 로드
+            if (this._getDDayFunc) {
+                this.renderComments(this._getDDayFunc);
+            }
+            // 스크롤 방지 (선택 사항)
+            document.body.style.overflow = 'hidden';
+        } else {
+            fanPage.classList.remove('active');
+            if (backdrop) backdrop.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    },
+
+    /**
      * 초기화 및 이벤트 바인딩
      * @param {string} memberId - 멤버 고유 식별자 (wonwoo, hoshi 등)
      * @param {function} getDDayString - D-Day 문자열을 반환하는 함수
@@ -99,9 +126,32 @@ export const CommentUI = {
         this.memberId = memberId;
         this._getDDayFunc = getDDayString;
 
+        // 1. 필수 요소 확인 및 이벤트 바인딩
+        const diamondBtn = document.getElementById('diamond-btn');
         const submitBtn = document.getElementById('submit-comment');
         const inputField = document.getElementById('comment-input');
+        let backdrop = document.getElementById('modal-backdrop');
 
+        // 백드롭이 없으면 동적으로 생성
+        if (!backdrop) {
+            backdrop = document.createElement('div');
+            backdrop.id = 'modal-backdrop';
+            backdrop.className = 'modal-backdrop';
+            document.body.appendChild(backdrop);
+        }
+
+        // 💎 다이아몬드 버튼 클릭 이벤트
+        if (diamondBtn) {
+            diamondBtn.onclick = (e) => {
+                e.stopPropagation();
+                this.toggleComments();
+            };
+        }
+
+        // 백드롭 클릭 시 닫기
+        backdrop.onclick = () => this.toggleComments(true);
+
+        // 댓글 등록 로직
         const handleSave = async () => {
             const text = inputField.value.trim();
             if (!text) return;
@@ -111,6 +161,12 @@ export const CommentUI = {
                 await CommentService.saveComment(this.memberId, dday, text);
                 inputField.value = '';
                 this.renderComments(getDDayString);
+                
+                // 등록 성공 시 약간 위로 스크롤하여 새 댓글 확인
+                const listContainer = document.getElementById('comment-list');
+                if (listContainer) {
+                    listContainer.scrollTo({ top: 0, behavior: 'smooth' });
+                }
             } catch (e) {
                 alert("댓글 저장에 실패했습니다. (서버 상태를 확인해주세요)");
             }
@@ -126,7 +182,6 @@ export const CommentUI = {
             };
         }
 
-        // 초기 댓글 로드
-        this.renderComments(getDDayString);
+        // 초기 댓글 로드는 모달이 열릴 때 수행하도록 토글 로직으로 위임됨
     }
 };
