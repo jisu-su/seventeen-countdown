@@ -1,9 +1,9 @@
 /**
- * 다중 멤버 댓글 시스템 스타일
+ * 다중 멤버 댓글 시스템 스타일 (우지 버전 디자인 100% 싱크)
  * 파일 경로: packages/shared/comment.css
  */
 
-/* 다이아몬드 토글 버튼 (좌측 중앙 고정) */
+/* 다이아몬드 토글 버튼 */
 .diamond-toggle {
     position: fixed;
     left: 30px;
@@ -12,7 +12,7 @@
     font-size: 2.8rem;
     cursor: pointer;
     z-index: 1100;
-    filter: drop-shadow(0 0 10px rgba(145, 168, 210, 0.4));
+    filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.1));
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     user-select: none;
 }
@@ -21,37 +21,29 @@
     transform: translateY(-50%) scale(1.2) rotate(15deg);
 }
 
-.diamond-toggle:active {
-    transform: translateY(-50%) scale(0.9);
-}
-
+/* 소통창 모달 */
 #fan-page {
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -40%); /* 아래에서 위로 미끄러지듯 등장하기 위한 초기 위치 */
+    transform: translate(-50%, -42%);
     width: 90%;
-    max-width: 600px;
+    max-width: 1000px; /* 우지 버전처럼 넓게 설정 */
     height: auto;
-    max-height: 80vh;
-    margin: 0;
-    padding: 30px;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(20px);
-    border-radius: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: 0 20px 50px rgba(31, 38, 135, 0.2);
+    max-height: 85vh;
+    background: #ffffff;
+    border-radius: 35px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
     z-index: 1000;
+    overflow: hidden; /* 헤더 둥근 모서리 적용을 위해 */
     
-    /* 초기 상태: 숨김 */
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    overflow-y: auto;
     transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
-/* 활성화 상태 (미끄러지듯 중앙으로 이동) */
+/* 활성화 상태 */
 #fan-page.active {
     opacity: 1;
     visibility: visible;
@@ -59,14 +51,160 @@
     transform: translate(-50%, -50%);
 }
 
-/* 모달 배경 (어둡게 처리) */
+/* 헤더 스타일 (우지 버전 싱크) */
+.fan-header {
+    background: #f1f3f5;
+    padding: 25px 40px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.header-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.header-icon {
+    font-size: 1.5rem;
+}
+
+.header-title h2 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #212529;
+    margin: 0;
+}
+
+.header-subtitle {
+    font-size: 0.95rem;
+    color: #868e96;
+    margin: 0;
+}
+
+/* 카드 본문 */
+.card-body {
+    padding: 35px 40px;
+    overflow-y: auto;
+    max-height: calc(85vh - 120px);
+}
+
+/* 입력 영역 (우지 버전 싱크) */
+.comment-input-container {
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 35px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#comment-input {
+    width: 100%;
+    height: 120px;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 1.1rem;
+    resize: none;
+    color: #495057;
+}
+
+#comment-input:focus {
+    outline: none;
+}
+
+#submit-comment {
+    align-self: flex-end;
+    padding: 10px 25px;
+    border-radius: 12px;
+    border: none;
+    background: #9cadce; /* 우지 버전 블루/그레이 톤 */
+    color: white;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#submit-comment:hover {
+    background: #7a8fb8;
+    transform: translateY(-2px);
+}
+
+/* 댓글 목록 */
+#comment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.comment-item {
+    background: #ffffff;
+    border: 1px solid #f1f3f5;
+    border-radius: 20px;
+    padding: 20px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    animation: fadeInSlide 0.5s ease forwards;
+}
+
+@keyframes fadeInSlide {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.comment-content {
+    flex: 1;
+}
+
+.comment-content p {
+    font-size: 1.05rem;
+    color: #343a40;
+    line-height: 1.6;
+    margin: 0;
+    word-break: break-all;
+}
+
+.comment-content small {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.85rem;
+    color: #adb5bd;
+}
+
+/* 삭제 버튼 (우지 버전 싱크) */
+.delete-btn {
+    background: #fff0f0;
+    color: #ff8787;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-left: 15px;
+    transition: all 0.2s ease;
+}
+
+.delete-btn:hover {
+    background: #ffc9c9;
+    color: #fa5252;
+}
+
+/* 백드롭 */
 .modal-backdrop {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(5px);
     z-index: 999;
     opacity: 0;
     visibility: hidden;
@@ -78,120 +216,46 @@
     visibility: visible;
 }
 
-.comment-input-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-bottom: 30px;
+/* 메시지 스타일 */
+.empty-msg, .loading {
+    text-align: center;
+    padding: 50px;
+    color: #adb5bd;
+    font-size: 1.1rem;
 }
 
-/* ... 기존 스타일 유지하되 모달 내부에 맞춰 조정 ... */
-#comment-input {
-    width: 100%;
-    height: 100px;
-    padding: 18px;
-    border-radius: 18px;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    background: rgba(255, 255, 255, 0.9);
-    font-family: inherit;
-    font-size: 1rem;
-    resize: none;
-    transition: all 0.3s ease;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
-}
-
-#comment-input:focus {
-    outline: none;
-    background: #fff;
-    border-color: var(--serenity);
-    box-shadow: 0 0 15px rgba(145, 168, 210, 0.15);
-}
-
-#submit-comment {
-    align-self: flex-end;
-    padding: 12px 30px;
-    border-radius: 50px;
-    border: none;
-    background: linear-gradient(135deg, var(--rose-quartz) 0%, var(--serenity) 100%);
-    color: white;
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 8px 20px rgba(145, 168, 210, 0.3);
-}
-
-#submit-comment:hover {
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 12px 25px rgba(145, 168, 210, 0.4);
-}
-
-#comment-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    /* 스크롤 시 부드럽게 */
-    padding-bottom: 20px;
-}
-
-.comment-item {
-    padding: 20px;
-    background: #fff;
-    border-radius: 20px;
-    border: 1px solid rgba(0, 0, 0, 0.03);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.02);
-    animation: slideUpFade 0.5s ease forwards;
-}
-
-@keyframes slideUpFade {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.comment-item p {
-    font-size: 1rem;
-    color: #333;
-    line-height: 1.6;
-    word-break: break-all;
-}
-
-.comment-item small {
-    display: block;
-    margin-top: 10px;
-    font-size: 0.85rem;
-    color: #aaa;
-}
-
+/* 더보기 버튼 */
 .load-more-btn {
-    display: block;
     width: 100%;
-    margin: 20px 0;
     padding: 15px;
-    background: rgba(145, 168, 210, 0.05);
-    border: 1px dashed var(--serenity);
+    background: #f8f9fa;
+    border: 1px dashed #dee2e6;
     border-radius: 15px;
-    color: var(--serenity);
+    color: #868e96;
     font-weight: 600;
+    margin-top: 20px;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
 .load-more-btn:hover {
-    background: var(--serenity);
-    color: white;
-    border-style: solid;
+    background: #e9ecef;
+    color: #495057;
 }
 
 /* 모바일 대응 */
-@media (max-width: 600px) {
-    .diamond-toggle {
-        left: 15px;
-        font-size: 2.2rem;
-    }
+@media (max-width: 768px) {
     #fan-page {
-        width: 92%;
-        padding: 20px;
-        max-height: 85vh;
+        width: 95%;
+        max-height: 90vh;
+    }
+    .fan-header {
+        padding: 20px 25px;
+    }
+    .card-body {
+        padding: 25px;
+    }
+    .comment-item {
+        padding: 15px 20px;
     }
 }
-

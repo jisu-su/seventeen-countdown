@@ -61,5 +61,22 @@ export const CommentService = {
             console.error('Error saving comment:', error);
             throw error;
         }
+    },
+
+    /**
+     * 특정 ID의 댓글을 삭제합니다.
+     * @param {number|string} id - 삭제할 댓글의 고유 ID
+     */
+    async deleteComment(id) {
+        try {
+            const response = await fetch(`${this.apiEndpoint}?id=${id}`, {
+                method: 'DELETE'
+            });
+            if (!response.ok) throw new Error('댓글을 삭제하지 못했습니다.');
+            return await response.json();
+        } catch (error) {
+            console.error('Error deleting comment:', error);
+            throw error;
+        }
     }
 };

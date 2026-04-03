@@ -1,20 +1,69 @@
 import { CommentService } from './commentService.js';
 
 /**
- * 다중 멤버 댓글 UI 및 이벤트 제어 모듈
+ * 다중 멤버 댓글 UI 및 이벤트 제어 모듈 (우지 버전 디자인 통합)
  * 파일 경로: packages/shared/commentUI.js
  */
 export const CommentUI = {
     // 상태 관리
-    memberId: null,    // 현재 페이지의 멤버 ID
-    lastId: null,      // 페이징용 마지막 ID
-    pageSize: 10,      // 한 번에 가져올 개수
-    _getDDayFunc: null, // D-Day 계산 함수 보관용
+    memberId: null,      // 현재 페이지의 멤버 ID
+    lastId: null,        // 페이징용 마지막 ID
+    pageSize: 10,        // 한 번에 가져올 개수
+    _getDDayFunc: null,   // D-Day 계산 함수 보관용
+    _memberNames: {      // 멤버 식별자별 표시 이름
+        'wonwoo': '원우',
+        'hoshi': '호시',
+        'jeonghan': '정한',
+        'woozi': '우지'
+    },
 
     /**
-     * 댓글 목록을 화면에 렌더링합니다.
-     * @param {function} getDDayString - 현재 D-Day 문자열을 반환하는 함수
-     * @param {boolean} isAppend - 기존 목록 뒤에 붙일지 여부
+     * 댓글 창(모달)의 가시성을 토글합니다.
+     */
+    toggleComments(forceClose = false) {
+        const fanPage = document.getElementById('fan-page');
+        const backdrop = document.getElementById('modal-backdrop');
+        
+        if (!fanPage) return;
+
+        const isOpening = !fanPage.classList.contains('active') && !forceClose;
+
+        if (isOpening) {
+            fanPage.classList.add('active');
+            if (backdrop) backdrop.classList.add('active');
+            if (this._getDDayFunc) {
+                this.renderComments(this._getDDayFunc);
+            }
+            document.body.style.overflow = 'hidden';
+        } else {
+            fanPage.classList.remove('active');
+            if (backdrop) backdrop.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    },
+
+    /**
+     * 댓글 삭제 처리 함수
+     */
+    async handleDelete(id) {
+        if (!confirm("이 소중한 응원을 삭제할까요?")) return;
+
+        try {
+            const result = await CommentService.deleteComment(id);
+            if (result.success) {
+                if (this._getDDayFunc) {
+                    this.renderComments(this._getDDayFunc);
+                }
+            } else {
+                alert("삭제에 실패했습니다.");
+            }
+        } catch (e) {
+            alert("삭제 중 오류가 발생했습니다.");
+        }
+    },
+
+    /**
+     * 댓글 목록을 화면에 렌더링합니다. (우지 버전 디자인 적용)
      */
     async renderComments(getDDayString, isAppend = false) {
         const listContainer = document.getElementById('comment-list');
@@ -22,14 +71,14 @@ export const CommentUI = {
 
         if (!isAppend) {
             this.lastId = null;
-            // 초기 로딩 시 스피너나 메시지 표시 가능 (생략)
+            listContainer.innerHTML = '<div class="loading">로딩 중...</div>';
         }
 
         const dday = getDDayString();
         const comments = await CommentService.fetchComments(this.memberId, dday, this.lastId, this.pageSize);
 
         if (comments.length === 0 && !isAppend) {
-            listContainer.innerHTML = `<p style="text-align:center; color:#888; padding:30px;">${dday}의 첫 번째 응원을 남겨보세요! 💎</p>`;
+            listContainer.innerHTML = `<p class="empty-msg">${dday}의 첫 번째 응원을 남겨보세요! 💎</p>`;
             this.toggleLoadMoreButton(false);
             return;
         }
@@ -44,8 +93,11 @@ export const CommentUI = {
 
             return `
                 <div class="comment-item">
-                    <p>${escapedText}</p>
-                    <small>${c.date}</small>
+                    <div class="comment-content">
+                        <p>${escapedText}</p>
+                        <small>${c.date}</small>
+                    </div>
+                    <button class="delete-btn" onclick="CommentUI.handleDelete(${c.id})">삭제</button>
                 </div>
             `;
         }).join('');
@@ -91,48 +143,39 @@ export const CommentUI = {
     },
 
     /**
-     * 댓글 창(모달)의 가시성을 토글합니다.
-     */
-    toggleComments(forceClose = false) {
-        const fanPage = document.getElementById('fan-page');
-        const backdrop = document.getElementById('modal-backdrop');
-        
-        if (!fanPage) return;
-
-        const isOpening = !fanPage.classList.contains('active') && !forceClose;
-
-        if (isOpening) {
-            fanPage.classList.add('active');
-            if (backdrop) backdrop.classList.add('active');
-            // 열릴 때 최신 댓글 로드
-            if (this._getDDayFunc) {
-                this.renderComments(this._getDDayFunc);
-            }
-            // 스크롤 방지 (선택 사항)
-            document.body.style.overflow = 'hidden';
-        } else {
-            fanPage.classList.remove('active');
-            if (backdrop) backdrop.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-    },
-
-    /**
      * 초기화 및 이벤트 바인딩
-     * @param {string} memberId - 멤버 고유 식별자 (wonwoo, hoshi 등)
-     * @param {function} getDDayString - D-Day 문자열을 반환하는 함수
      */
     init(memberId, getDDayString) {
         this.memberId = memberId;
         this._getDDayFunc = getDDayString;
 
-        // 1. 필수 요소 확인 및 이벤트 바인딩
+        // 1. 헤더 및 기본 구조 주입 (우지 버전 싱크)
+        const fanPage = document.getElementById('fan-page');
+        if (fanPage && !document.querySelector('.fan-header')) {
+            const memberName = this._memberNames[memberId] || '멤버';
+            fanPage.innerHTML = `
+                <div class="fan-header">
+                    <div class="header-title">
+                        <span class="header-icon">💎</span>
+                        <h2>캐럿 소통창</h2>
+                    </div>
+                    <p class="header-subtitle">${memberName}에게 따뜻한 응원의 한마디를 남겨주세요!</p>
+                </div>
+                <div class="card-body">
+                    <div class="comment-input-container">
+                        <textarea id="comment-input" placeholder="여기에 내용을 입력하세요..."></textarea>
+                        <button id="submit-comment">등록하기</button>
+                    </div>
+                    <div id="comment-list"></div>
+                </div>
+            `;
+        }
+
         const diamondBtn = document.getElementById('diamond-btn');
         const submitBtn = document.getElementById('submit-comment');
         const inputField = document.getElementById('comment-input');
         let backdrop = document.getElementById('modal-backdrop');
 
-        // 백드롭이 없으면 동적으로 생성
         if (!backdrop) {
             backdrop = document.createElement('div');
             backdrop.id = 'modal-backdrop';
@@ -140,7 +183,6 @@ export const CommentUI = {
             document.body.appendChild(backdrop);
         }
 
-        // 💎 다이아몬드 버튼 클릭 이벤트
         if (diamondBtn) {
             diamondBtn.onclick = (e) => {
                 e.stopPropagation();
@@ -148,10 +190,8 @@ export const CommentUI = {
             };
         }
 
-        // 백드롭 클릭 시 닫기
         backdrop.onclick = () => this.toggleComments(true);
 
-        // 댓글 등록 로직
         const handleSave = async () => {
             const text = inputField.value.trim();
             if (!text) return;
@@ -162,13 +202,12 @@ export const CommentUI = {
                 inputField.value = '';
                 this.renderComments(getDDayString);
                 
-                // 등록 성공 시 약간 위로 스크롤하여 새 댓글 확인
                 const listContainer = document.getElementById('comment-list');
                 if (listContainer) {
                     listContainer.scrollTo({ top: 0, behavior: 'smooth' });
                 }
             } catch (e) {
-                alert("댓글 저장에 실패했습니다. (서버 상태를 확인해주세요)");
+                alert("댓글 저장에 실패했습니다.");
             }
         };
 
@@ -181,7 +220,8 @@ export const CommentUI = {
                 }
             };
         }
-
-        // 초기 댓글 로드는 모달이 열릴 때 수행하도록 토글 로직으로 위임됨
     }
 };
+
+// 전역객체에 노출 (inline onclick 핸들러에서 사용하기 위함)
+window.CommentUI = CommentUI;

@@ -75,3 +75,30 @@ export async function onRequestPost(context) {
     return new Response(JSON.stringify({ error: e.message }), { status: 500 });
   }
 }
+
+// [DELETE] 특정 댓글을 삭제합니다.
+export async function onRequestDelete(context) {
+  try {
+    const { searchParams } = new URL(context.request.url);
+    const id = searchParams.get('id'); // 필수: 삭제할 댓글 ID
+
+    if (!id) {
+      return new Response(JSON.stringify({ error: 'id 파라미터가 필요합니다.' }), { 
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    await context.env.DB.prepare(
+      "DELETE FROM comments WHERE id = ?"
+    )
+    .bind(id)
+    .run();
+
+    return new Response(JSON.stringify({ success: true }), {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  } catch (e) {
+    return new Response(JSON.stringify({ error: e.message }), { status: 500 });
+  }
+}
