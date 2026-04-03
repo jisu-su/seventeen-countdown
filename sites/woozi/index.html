@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WOOZI Countdown : 2027.03.14</title>
     <link rel="stylesheet" href="../../packages/shared/style.css">
+    <link rel="stylesheet" href="../../packages/shared/comment.css">
 </head>
 <body>
 
@@ -20,6 +21,17 @@
         <section id="timer-page" class="page active full-screen">
             <div class="timer-label">WOOZI DISCHARGE COUNTDOWN</div>
             <div id="clock-woozi" class="countdown-display"></div>
+        </section>
+
+        <!-- COMMENT 섹션 추가 -->
+        <section id="fan-page">
+            <div class="comment-input-container">
+                <textarea id="comment-input" placeholder="우지에게 보낼 응원을 남겨보세요! 💎"></textarea>
+                <button id="submit-comment">등록하기</button>
+            </div>
+            <div id="comment-list">
+                <!-- 댓글이 여기에 렌더링됩니다 -->
+            </div>
         </section>
 
     </div>

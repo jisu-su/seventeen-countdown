@@ -1,0 +1,167 @@
+﻿import { CommentService } from './commentService.js';
+
+/**
+ * 댓글 관련 UI 및 이벤트 제어 클래스
+ * 파일 경로: src/features/comment/commentUI.js
+ */
+export const CommentUI = {
+    // 페이징 처리를 위한 상태 값 관리
+    lastId: null,      // 마지막으로 불러온 댓글의 ID (다음 데이터를 가져올 기준점)
+    pageSize: 10,      // 한 번에 불러올 댓글의 개수
+    _getDDayFunc: null, // D-Day 계산 함수 보관용
+
+    /**
+     * 댓글 목록을 화면에 렌더링(그리기) 합니다.
+     * @param {function} getDDayString - 현재 D-Day 문자열을 반환하는 함수
+     * @param {boolean} isAppend - 기존 목록 뒤에 붙일지 여부 (더 보기 클릭 시 true)
+     */
+    async renderComments(getDDayString, isAppend = false) {
+        const listContainer = document.getElementById('comment-list');
+        if (!listContainer) return;
+
+        // [1] 처음부터 다시 불러오는 경우 (isAppend=false) 상태 초기화
+        if (!isAppend) {
+            this.lastId = null;
+            listContainer.innerHTML = ''; // 화면 비우기
+        }
+
+        const dday = getDDayString();
+        // [2] 서비스에서 댓글 데이터 가져오기 (마지막 ID와 가져올 개수 전달)
+        const comments = await CommentService.fetchComments(dday, this.lastId, this.pageSize);
+
+        // [3] 댓글이 하나도 없는 경우 (최초 조회 시)
+        if (comments.length === 0 && !isAppend) {
+            listContainer.innerHTML = `<p style="text-align:center; color:#999; padding:20px;">${dday}의 첫 번째 응원을 남겨보세요! 💎</p>`;
+            this.toggleLoadMoreButton(false); // 더 보기 버튼 숨기기
+            return;
+        }
+
+        // [4] 데이터를 HTML 템플릿으로 변환
+        const html = comments.map((c) => {
+            const escapedText = c.text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+
+            return `
+                <div class="comment-item">
+                    <p>${escapedText}</p>
+                    <small>${c.date}</small>
+                    <button class="delete-btn" data-id="${c.id}">삭제</button>
+                </div>
+            `;
+        }).join('');
+
+        // [5] 화면에 반영
+        if (isAppend) {
+            listContainer.insertAdjacentHTML('beforeend', html); // 기존 댓글 아래에 추가
+        } else {
+            listContainer.innerHTML = html; // 새 댓글로 덮어쓰기
+        }
+
+        // [6] 다음 페이징을 위해 마지막(가장 오래된) 댓글의 ID 기록
+        if (comments.length > 0) {
+            this.lastId = comments[comments.length - 1].id;
+        }
+
+        // [7] 불러온 개수가 설정값(10개)보다 적으면 더 불러올 데이터가 없으므로 버튼 숨김
+        this.toggleLoadMoreButton(comments.length === this.pageSize);
+    },
+
+    /**
+     * "더 보기" 버튼의 생성 및 표시 여부를 제어합니다.
+     */
+    toggleLoadMoreButton(show) {
+        let loadMoreBtn = document.getElementById('load-more-btn');
+        const listContainer = document.getElementById('comment-list');
+        if (!listContainer) return;
+
+        // 버튼이 없는데 생성해야 하는 경우
+        if (show && !loadMoreBtn) {
+            loadMoreBtn = document.createElement('button');
+            loadMoreBtn.id = 'load-more-btn';
+            loadMoreBtn.className = 'load-more-btn';
+            loadMoreBtn.innerText = '댓글 더 보기 ▾';
+            listContainer.after(loadMoreBtn); // 목록 바로 뒤에 추가
+            
+            // 더 보기 버튼 클릭 이벤트
+            loadMoreBtn.onclick = () => {
+                if (this._getDDayFunc) {
+                    this.renderComments(this._getDDayFunc, true);
+                }
+            };
+        }
+
+        // 상태에 따라 노출/숨김 처리
+        if (loadMoreBtn) {
+            loadMoreBtn.style.display = show ? 'block' : 'none';
+        }
+    },
+
+    /**
+     * 댓글 삭제를 처리하는 함수입니다.
+     */
+    async handleDelete(id, getDDayString) {
+        if (confirm("이 소중한 응원을 삭제할까요?")) { // 삭제 전 한 번 더 물어보기
+            const success = await CommentService.deleteComment(id);
+            if (success) {
+                this.renderComments(getDDayString); // 삭제 성공 시 화면 갱신
+            } else {
+                alert("삭제에 실패했습니다. (DB 권한을 확인해주세요)");
+            }
+        }
+    },
+
+    /**
+     * 초기화 및 이벤트 바인딩
+     */
+    init(getDDayString) {
+        // 나중에 "더 보기" 버튼 클릭 시 사용할 수 있도록 함수 참조를 보관합니다.
+        this._getDDayFunc = getDDayString;
+
+        const submitBtn = document.getElementById('submit-comment');
+        const inputField = document.getElementById('comment-input');
+
+        // 실제 저장 로직을 수행하는 함수
+        const handleSave = async () => {
+            const text = inputField.value.trim(); // 앞뒤 공백 제거
+            if (!text) return; // 내용이 없으면 중단
+
+            const dday = getDDayString();
+            try {
+                await CommentService.saveComment(dday, text); // 서버로 전송
+                inputField.value = ''; // 입력창 비우기
+                this.renderComments(getDDayString); // 댓글 목록 갱신
+            } catch (e) {
+                alert("댓글 저장에 실패했습니다. (Cloudflare D1 바인딩을 확인하세요)");
+            }
+        };
+
+        if (submitBtn && inputField) {
+            // [방법1] 등록하기 버튼 클릭 시 저장
+            submitBtn.addEventListener('click', handleSave);
+
+            // [방법2] 엔터(Enter) 키 입력 시 저장 (Shift + Enter는 줄바꿈)
+            inputField.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault(); // 기본 줄바꿈 동작 방지
+                    handleSave();
+                }
+            });
+        }
+
+        // [방법3] 삭제 버튼 클릭 이벤트 (이벤트 위임 기법 사용)
+        const commentList = document.getElementById('comment-list');
+        if (commentList) {
+            commentList.addEventListener('click', (e) => {
+                if (e.target.classList.contains('delete-btn')) {
+                    const id = e.target.getAttribute('data-id');
+                    this.handleDelete(id, getDDayString);
+                }
+            });
+        }
+    }
+};
+

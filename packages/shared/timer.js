@@ -32,3 +32,21 @@ export function initCountdown(targetDateString, elementId) {
     update(); // 1. 즉시 한 번 실행하여 숫자를 바로 채움
     setInterval(update, 1000); // 2. 그 후 1초마다 반복
 }
+
+/**
+ * 특정 날짜까지의 남은 일수를 D-형태의 문자열로 반환
+ * @param {string} targetDateString 
+ * @returns {string} (예: 'D-340')
+ */
+export function getDDayString(targetDateString) {
+    const targetDate = new Date(targetDateString);
+    targetDate.setHours(0, 0, 0, 0); // 날짜 계산을 위해 시분초 초기화
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const distance = targetDate.getTime() - today.getTime();
+    const d = Math.ceil(distance / (1000 * 60 * 60 * 24));
+    
+    return d > 0 ? `D-${d}` : d === 0 ? "D-Day" : `D+${Math.abs(d)}`;
+}

@@ -1,0 +1,162 @@
+﻿/**
+ * 댓글창 전용 CSS 파일 (사용자 기존 투명도 반영 버전)
+ * 파일 경로: src/features/comment/comment.css
+ */
+
+/* [1] 소통창 메인 카드 컨테이너 (기존의 --glass 투명도 0.7 반영) */
+.card-container {
+    background: rgba(255, 255, 255, 0.7); /* 기존에 쓰시던 0.7 투명도 적용 */
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    backdrop-filter: blur(20px); /* 배경을 더 흐릿하고 이쁘게 만드는 효과 */
+}
+
+/* [2] 카드 상단 헤더 (기존 간격 및 구분선 반영) */
+.fan-header {
+    background: rgba(255, 255, 255, 0.3); /* 헤더는 조금 더 투명하게 하여 일체감 제공 */
+    padding: 30px 40px 15px 40px; /* 기존의 padding-bottom 15px 반영 */
+    margin-bottom: 25px; /* 기존의 margin-bottom 25px 반영 */
+    border-bottom: 2px solid rgba(0, 0, 0, 0.05); /* 기존의 구분선 스타일 반영 */
+}
+
+/* 헤더 제목 간격 (기존 35px 반영) */
+#fan-page h2 {
+    margin-bottom: 35px;
+}
+
+/* [3] 댓글 섹션 바디 */
+.comment-section {
+    padding: 0 40px 30px 40px; /* 헤더의 margin-bottom과 조화롭도록 설정 */
+    flex: 1;
+    overflow-y: auto;
+    background: transparent;
+}
+
+/* [4] 메인 입력창(Textarea) 스타일 (기존 투명도 0.8 반영) */
+.comment-input {
+    width: 100%;
+    min-height: 100px; /* 기존 100px 반영 */
+    padding: 20px;
+    border-radius: 15px; /* 기존 15px 반영 */
+    border: 1px solid rgba(0, 0, 0, 0.1); /* 기존 Border 반영 */
+    background: rgba(255, 255, 255, 0.8); /* 기존의 0.8 투명도 반영 */
+    font-size: 1rem;
+    resize: none;
+    margin-bottom: 10px; /* 기존 margin 10px 반영 */
+    font-family: inherit;
+    transition: all 0.2s;
+}
+
+/* 입력창 포커스 시 효과 */
+.comment-input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.95); /* 입력 시에는 조금 더 잘 보이도록 함 */
+    border-color: var(--serenity);
+}
+
+/* 버튼 컨테이너 */
+.submit-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 30px;
+}
+
+/* [5] 등록하기 버튼 스타일 */
+.submit-btn {
+    background: var(--serenity);
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+    opacity: 0.9;
+}
+
+.submit-btn:hover {
+    opacity: 1;
+    transform: translateY(-1px);
+}
+
+/* [6] 개별 댓글 아이템 (배경은 투명하지 않게 하여 가독성 확보) */
+.comment-item {
+    background: #ffffff; /* 댓글 내용은 잘 보여야 하므로 불투명하게 유지 */
+    padding: 22px 28px;
+    border-radius: 18px;
+    margin-bottom: 15px;
+    position: relative;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+}
+
+/* 댓글 날짜 */
+.comment-item small {
+    color: #b0b5c1;
+    font-size: 0.85rem;
+}
+
+/* [7] 삭제 버튼 스타일 */
+.delete-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: #fff0f0;
+    color: #f7c9cb;
+    border: none;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 5px 12px;
+    border-radius: 6px;
+    transition: 0.2s;
+}
+
+.delete-btn:hover {
+    background: #ffe4e4;
+    color: #ff9a9a;
+}
+
+/* 스크롤바 디자인 */
+.comment-section::-webkit-scrollbar {
+    width: 6px;
+}
+.comment-section::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+/* [8] "댓글 더 보기" 버튼 디자인 (이미지 1번 스타일과 조화롭게) */
+.load-more-btn {
+    display: block;
+    width: 200px;
+    margin: 20px auto 40px auto; /* 중앙 정렬 및 상하 여백 */
+    padding: 12px 20px;
+    background: rgba(255, 255, 255, 0.4); /* 유리 테마에 맞춘 반투명 배경 */
+    color: var(--serenity); /* 글자색은 세레니티 */
+    border: 1.5px solid var(--serenity);
+    border-radius: 25px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+/* 마우스 호버 시 효과 */
+.load-more-btn:hover {
+    background: var(--serenity);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(145, 168, 210, 0.3);
+}
+
+/* 클릭 시 눌리는 효과 */
+.load-more-btn:active {
+    transform: translateY(0);
+}
+
