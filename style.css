@@ -6,7 +6,7 @@
             grid-template-rows: 1fr 1fr;    /* 세로를 똑같이 2칸으로 나눔 */
             width: 100vw; 
             height: 100vh;
-        }
+        } 
 
         /* 각 멤버별 카드(칸) 스타일 */
         .member-card {
