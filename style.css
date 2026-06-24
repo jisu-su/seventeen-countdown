@@ -23,7 +23,7 @@
     position: absolute;
     top: 70%;
     left: 50%;
-    width: min(28vw, 285px);
+    width: min(21vw, 210px);
     height: auto;
     transform: translate(-50%, -50%);
     z-index: 1;
@@ -75,7 +75,7 @@
 @media (max-width: 720px) {
     .member-diamond {
         top: 72%;
-        width: min(42vw, 230px);
+        width: min(32vw, 170px);
     }
 
     .member-card.has-member-diamond {
