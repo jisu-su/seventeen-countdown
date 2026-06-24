@@ -1,7 +1,14 @@
 import { initCountdown } from '../../packages/shared/timer.js';
 import { setupMemberDiamondUnlock } from '../../packages/shared/diamondUnlock.js';
 
-const TARGET_DATE = 'January 2, 2027 00:00:00';
+// 테스트 전용 동적 날짜 계산 (test/diamond-unlock-flow 브랜치)
+let testStartTime = localStorage.getItem('svt_test_start_time');
+if (!testStartTime) {
+    testStartTime = Date.now().toString();
+    localStorage.setItem('svt_test_start_time', testStartTime);
+}
+const startMs = parseInt(testStartTime, 10);
+const TARGET_DATE = new Date(startMs + 120 * 1000).toISOString();
 
 initCountdown(TARGET_DATE, 'clock-wonwoo');
 setupMemberDiamondUnlock('wonwoo', TARGET_DATE);
