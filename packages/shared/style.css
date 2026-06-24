@@ -61,14 +61,23 @@ body, html { width: 100%; height: 100%; font-family: 'Pretendard', sans-serif; o
     stroke: var(--diamond-clear-line);
     stroke-width: 2;
     stroke-linejoin: round;
-    stroke-opacity: 0.25;
+    stroke-opacity: 0.38;
     transition: fill 1.5s ease-in-out, filter 1.5s ease-in-out, stroke-opacity 1.5s ease-in-out;
 }
 
 .diamond-cell.active {
     fill: var(--diamond-active-fill);
-    filter: drop-shadow(0 0 10px rgba(111, 184, 255, 0.75));
     stroke-opacity: 0.85;
+    animation: diamondGlow 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes diamondGlow {
+    0% {
+        filter: drop-shadow(0 0 5px rgba(111, 184, 255, 0.5)) brightness(0.95);
+    }
+    100% {
+        filter: drop-shadow(0 0 15px rgba(111, 184, 255, 0.95)) brightness(1.15);
+    }
 }
 
 .diamond-unlock-overlay {
