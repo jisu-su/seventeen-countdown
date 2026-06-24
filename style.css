@@ -1,40 +1,74 @@
+.hub-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    width: 100vw;
+    height: 100vh;
+}
 
-        /* 허브 페이지 전용: 2x2 그리드 레이아웃 설정 */
-        .hub-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* 가로를 똑같이 2칸으로 나눔 */
-            grid-template-rows: 1fr 1fr;    /* 세로를 똑같이 2칸으로 나눔 */
-            width: 100vw; 
-            height: 100vh;
-        }
+.diamond-cell {
+    fill: rgba(255, 255, 255, 0.03);
+    stroke: var(--diamond-clear-line);
+    stroke-width: 2.5;
+    stroke-linejoin: round;
+    transition: fill 1.5s ease-in-out, filter 1.5s ease-in-out;
+}
 
-        /* 각 멤버별 카드(칸) 스타일 */
-        .member-card {
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            cursor: pointer; /* 마우스를 올리면 손가락 모양으로 변경 */
-            transition: transform 0.3s; /* 호버 효과를 부드럽게 */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
+.diamond-cell.active {
+    fill: var(--diamond-active-fill);
+    filter: drop-shadow(0 0 10px rgba(111, 184, 255, 0.75));
+}
 
-        /* 마우스를 올렸을 때 살짝 커지고 배경이 밝아지는 효과 */
-        .member-card:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: scale(1.02);
-        }
-        
-        /* 허브에서는 글씨 크기를 조금 줄여서 4개가 다 보이게 조절합니다 */
-        /* 1. 멤버 이름(JEONGHAN, WOOZI 등) 크기 */
-        .member-card .timer-label { 
-            font-size: 1.5rem; /* 기존 1rem에서 1.5rem 정도로 키워보세요 */
-            margin-bottom: 15px; 
-            letter-spacing: 2px;
-        }
+.member-diamond {
+    position: absolute;
+    inset: 50%;
+    width: min(38vw, 360px);
+    height: auto;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    opacity: 0.92;
+    pointer-events: none;
+    filter: drop-shadow(0 0 16px rgba(185, 231, 255, 0.55));
+}
 
-        /* 2. 카운트다운 숫자(00d 00:00:00) 크기 */
-        .member-card .countdown-display { 
-            font-size: 3.5rem; /* 기존 2.5rem에서 4rem 정도로 키워보세요 */
-            font-weight: 800;
-        }
+.member-card {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    transition: transform 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+.member-card:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.02);
+}
+
+.member-card .timer-label {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    letter-spacing: 2px;
+}
+
+.member-card .countdown-display {
+    font-size: 3.5rem;
+    font-weight: 800;
+}
+
+@media (max-width: 720px) {
+    .member-diamond {
+        width: min(56vw, 280px);
+    }
+
+    .member-card .timer-label {
+        font-size: 1rem;
+    }
+
+    .member-card .countdown-display {
+        font-size: clamp(1.5rem, 8vw, 2.5rem);
+    }
+}
