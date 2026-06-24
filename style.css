@@ -21,11 +21,12 @@
 
 .member-diamond {
     position: absolute;
-    inset: 50%;
-    width: min(38vw, 360px);
+    top: 70%;
+    left: 50%;
+    width: min(28vw, 285px);
     height: auto;
     transform: translate(-50%, -50%);
-    z-index: -1;
+    z-index: 1;
     opacity: 0.92;
     pointer-events: none;
     filter: drop-shadow(0 0 16px rgba(185, 231, 255, 0.55));
@@ -41,6 +42,18 @@
     align-items: center;
     position: relative;
     z-index: 1;
+    overflow: hidden;
+}
+
+.member-card.has-member-diamond {
+    justify-content: flex-start;
+    padding-top: clamp(38px, 7vh, 72px);
+}
+
+.member-card .timer-label,
+.member-card .countdown-display {
+    position: relative;
+    z-index: 2;
 }
 
 .member-card:hover {
@@ -61,7 +74,12 @@
 
 @media (max-width: 720px) {
     .member-diamond {
-        width: min(56vw, 280px);
+        top: 72%;
+        width: min(42vw, 230px);
+    }
+
+    .member-card.has-member-diamond {
+        padding-top: 28px;
     }
 
     .member-card .timer-label {

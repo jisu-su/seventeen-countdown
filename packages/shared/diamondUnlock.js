@@ -8,12 +8,13 @@ import {
 export function setupMemberDiamondUnlock(memberId, targetDateString) {
     const timerPage = document.getElementById('timer-page');
     const targetTime = new Date(targetDateString).getTime();
+    let intervalId;
 
     if (!timerPage || Number.isNaN(targetTime)) {
         return;
     }
 
-    function markUnlockableWhenReady() {
+    function unlockNow() {
         if (Date.now() < targetTime) {
             return false;
         }
@@ -22,36 +23,41 @@ export function setupMemberDiamondUnlock(memberId, targetDateString) {
 
         if (isDiamondMemberUnlocked(memberId)) {
             timerPage.classList.add('is-unlocked');
+            return true;
+        }
+
+        const unlockedNow = unlockDiamondMember(memberId);
+
+        timerPage.classList.add('is-unlocked');
+
+        if (unlockedNow) {
+            playDiamondUnlockAnimation();
         }
 
         return true;
     }
 
-    function handleUnlockClick() {
-        if (Date.now() < targetTime) {
-            return;
-        }
-
-        const unlockedNow = unlockDiamondMember(memberId);
-
-        if (!unlockedNow) {
-            timerPage.classList.add('is-unlocked');
-            return;
-        }
-
-        timerPage.classList.add('is-unlocked');
-        playDiamondUnlockAnimation();
+    function prepareClickUnlock() {
+        timerPage.classList.add('is-unlockable');
+        timerPage.addEventListener('click', unlockNow, { once: true });
     }
 
-    if (!markUnlockableWhenReady()) {
-        const intervalId = setInterval(() => {
-            if (markUnlockableWhenReady()) {
-                clearInterval(intervalId);
-            }
-        }, 1000);
+    if (Date.now() >= targetTime) {
+        prepareClickUnlock();
+        return;
     }
 
-    timerPage.addEventListener('click', handleUnlockClick);
+    intervalId = setInterval(() => {
+        if (Date.now() >= targetTime) {
+            clearInterval(intervalId);
+            prepareClickUnlock();
+        }
+    }, 1000);
+
+    if (Date.now() >= targetTime) {
+        clearInterval(intervalId);
+        prepareClickUnlock();
+    }
 }
 
 function playDiamondUnlockAnimation() {

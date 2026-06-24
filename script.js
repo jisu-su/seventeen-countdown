@@ -30,6 +30,7 @@ function renderUnlockedDiamond(member) {
 
     const diamond = createDiamondSvg();
     diamond.classList.add('member-diamond');
+    card.classList.add('has-member-diamond');
     card.append(diamond);
     initDiamondState(diamond);
 }
