@@ -1,6 +1,7 @@
-import { initCountdown, getDDayString } from '../../packages/shared/timer.js';
+import { initCountdown } from '../../packages/shared/timer.js';
+import { setupMemberDiamondUnlock } from '../../packages/shared/diamondUnlock.js';
 
-const TARGET_DATE = "March 15, 2027 00:00:00";
+const TARGET_DATE = 'March 15, 2027 00:00:00';
 
-// 1. 카운트다운 초기화
-initCountdown(TARGET_DATE, "clock-hoshi");
+initCountdown(TARGET_DATE, 'clock-hoshi');
+setupMemberDiamondUnlock('hoshi', TARGET_DATE);
