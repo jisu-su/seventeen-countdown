@@ -1,4 +1,3 @@
-// apps/hub/script.js
 import { initCountdown } from './packages/shared/timer.js';
 import { createDiamondSvg, initDiamondState, isDiamondMemberUnlocked } from './packages/shared/diamondState.js';
 
