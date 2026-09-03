@@ -1,7 +1,3 @@
-import { initCountdown } from '../../packages/shared/timer.js';
-import { setupMemberDiamondUnlock } from '../../packages/shared/diamondUnlock.js';
+import { initMemberPage } from '../../packages/shared/memberPage.js';
 
-const TARGET_DATE = 'March 14, 2027 00:00:00';
-
-initCountdown(TARGET_DATE, 'clock-woozi');
-setupMemberDiamondUnlock('woozi', TARGET_DATE);
+initMemberPage('woozi');

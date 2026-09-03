@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WOOZI Countdown : 2027.03.14</title>
+    <!-- 전역일은 members.js가 채운다. 여기엔 바뀌지 않는 이름만 둔다. -->
+    <title>WOOZI Countdown</title>
     <link rel="stylesheet" href="../../packages/shared/style.css">
 </head>
 <body>
@@ -13,15 +14,12 @@
     <a href="../../index.html" class="back-button">
         <span class="back-icon">←</span>
     </a>
-    
+
     <div class="container">
-
-        <!-- TIMER 째깍 -->
         <section id="timer-page" class="page active full-screen">
-            <div class="timer-label">WOOZI DISCHARGE COUNTDOWN</div>
-            <div id="clock-woozi" class="countdown-display"></div>
+            <div class="timer-label" data-member-label></div>
+            <div id="clock" class="countdown-display"></div>
         </section>
-
     </div>
 
     <script type="module" src="script.js"></script>

@@ -5,9 +5,13 @@ import {
     unlockDiamondMember
 } from './diamondState.js';
 
-export function setupMemberDiamondUnlock(memberId, targetDateString) {
+/**
+ * @param {string} memberId
+ * @param {number|string} target 밀리초 타임스탬프, 또는 Date가 파싱할 수 있는 문자열
+ */
+export function setupMemberDiamondUnlock(memberId, target) {
     const timerPage = document.getElementById('timer-page');
-    const targetTime = new Date(targetDateString).getTime();
+    const targetTime = typeof target === 'number' ? target : new Date(target).getTime();
     let intervalId;
 
     if (!timerPage || Number.isNaN(targetTime)) {

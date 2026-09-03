@@ -1,6 +1,7 @@
 {
   "name": "seventeen-countdown",
   "private": true,
+  "type": "module",
   "workspaces": [
     "sites/*",
     "packages/*"
