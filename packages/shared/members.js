@@ -57,7 +57,7 @@ export const MEMBERS = [
         name: 'JEONGHAN',
         nameKo: '정한',
         birthDate: '1995-10-04',
-        enlistDate: null,              // TODO: 확인 후 기입
+        enlistDate: '2024-09-26',
         dischargeDate: '2026-06-25',
         diamondCell: 5,
         href: './sites/jeonghan/index.html',
@@ -69,7 +69,7 @@ export const MEMBERS = [
         name: 'HOSHI',
         nameKo: '호시',
         birthDate: '1996-06-15',
-        enlistDate: null,              // TODO: 확인 후 기입
+        enlistDate: '2025-09-16',
         dischargeDate: '2027-03-15',
         diamondCell: 8,
         href: './sites/hoshi/index.html',
@@ -81,7 +81,7 @@ export const MEMBERS = [
         name: 'WONWOO',
         nameKo: '원우',
         birthDate: '1996-07-17',
-        enlistDate: null,              // TODO: 확인 후 기입
+        enlistDate: '2025-04-03',
         dischargeDate: '2027-01-02',
         diamondCell: 6,
         href: './sites/wonwoo/index.html',
@@ -93,7 +93,7 @@ export const MEMBERS = [
         name: 'WOOZI',
         nameKo: '우지',
         birthDate: '1996-11-22',
-        enlistDate: null,              // TODO: 확인 후 기입
+        enlistDate: '2025-09-15',
         dischargeDate: '2027-03-14',
         diamondCell: 7,
         // 우지는 별도 저장소·별도 도메인으로 운영된다 (jisu-su/woozi-countdown)
