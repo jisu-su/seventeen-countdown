@@ -1,3 +1,12 @@
+/**
+ * 다이아몬드 해금
+ * 파일 경로: packages/shared/diamondUnlock.js
+ *
+ * 전역일 도달 여부를 스스로 감시하지 않는다. 그 판단은 memberStatus.js가
+ * 하고, memberTimer의 상태 전환 콜백이 이 파일의 armDiamondUnlock()을
+ * 불러준다. 예전에는 여기서 setInterval을 따로 돌렸다.
+ */
+
 import {
     createDiamondSvg,
     initDiamondState,
@@ -6,65 +15,46 @@ import {
 } from './diamondState.js';
 
 /**
+ * 클릭하면 해금되도록 준비한다. 전역 상태가 된 뒤에 호출해야 한다.
+ *
  * @param {string} memberId
- * @param {number|string} target 밀리초 타임스탬프, 또는 Date가 파싱할 수 있는 문자열
+ * @param {Object} [options]
+ * @param {Element} [options.container] 클릭을 받을 요소. 기본은 #timer-page.
+ * @returns {boolean} 준비되었으면 true
  */
-export function setupMemberDiamondUnlock(memberId, target) {
-    const timerPage = document.getElementById('timer-page');
-    const targetTime = typeof target === 'number' ? target : new Date(target).getTime();
-    let intervalId;
+export function armDiamondUnlock(memberId, options = {}) {
+    const { container = document.getElementById('timer-page') } = options;
 
-    if (!timerPage || Number.isNaN(targetTime)) {
-        return;
+    if (!container) {
+        return false;
     }
 
-    function unlockNow() {
-        if (Date.now() < targetTime) {
-            return false;
-        }
+    container.classList.add('is-unlockable');
 
-        timerPage.classList.add('is-unlockable');
+    // 이미 해금한 사람에게 연출을 다시 보여주지는 않는다.
+    if (isDiamondMemberUnlocked(memberId)) {
+        container.classList.add('is-unlocked');
+        return true;
+    }
 
-        if (isDiamondMemberUnlocked(memberId)) {
-            timerPage.classList.add('is-unlocked');
-            return true;
-        }
-
+    container.addEventListener('click', () => {
         const unlockedNow = unlockDiamondMember(memberId);
 
-        timerPage.classList.add('is-unlocked');
+        container.classList.add('is-unlocked');
 
         if (unlockedNow) {
             playDiamondUnlockAnimation();
         }
+    }, { once: true });
 
-        return true;
-    }
-
-    function prepareClickUnlock() {
-        timerPage.classList.add('is-unlockable');
-        timerPage.addEventListener('click', unlockNow, { once: true });
-    }
-
-    if (Date.now() >= targetTime) {
-        prepareClickUnlock();
-        return;
-    }
-
-    intervalId = setInterval(() => {
-        if (Date.now() >= targetTime) {
-            clearInterval(intervalId);
-            prepareClickUnlock();
-        }
-    }, 1000);
-
-    if (Date.now() >= targetTime) {
-        clearInterval(intervalId);
-        prepareClickUnlock();
-    }
+    return true;
 }
 
-function playDiamondUnlockAnimation() {
+/**
+ * 전체화면 해금 연출을 한 번 재생한다.
+ * #11에서 허브가 ?unlock= 파라미터를 받았을 때도 이 함수를 쓴다.
+ */
+export function playDiamondUnlockAnimation() {
     const overlay = document.createElement('div');
     const diamond = createDiamondSvg();
 
@@ -75,11 +65,6 @@ function playDiamondUnlockAnimation() {
 
     initDiamondState(diamond);
 
-    window.setTimeout(() => {
-        overlay.classList.add('is-leaving');
-    }, 1800);
-
-    window.setTimeout(() => {
-        overlay.remove();
-    }, 2600);
+    window.setTimeout(() => overlay.classList.add('is-leaving'), 1800);
+    window.setTimeout(() => overlay.remove(), 2600);
 }

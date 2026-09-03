@@ -1,29 +1,39 @@
-import { MEMBERS, getDischargeTime } from './packages/shared/members.js';
-import { initCountdown } from './packages/shared/timer.js';
+import { MEMBERS } from './packages/shared/members.js';
+import { STATUS } from './packages/shared/memberStatus.js';
+import { initMemberTimer } from './packages/shared/memberTimer.js';
 import { createDiamondSvg, initDiamondState, isDiamondMemberUnlocked } from './packages/shared/diamondState.js';
 
 // 멤버 목록과 날짜는 packages/shared/members.js 한 곳에만 있다.
 MEMBERS.forEach(member => {
-    const dischargeTime = getDischargeTime(member);
+    const card = document.querySelector(`[data-member-id="${member.id}"]`);
+    const display = document.getElementById(`clock-${member.id}`);
 
-    initCountdown(dischargeTime, `clock-${member.id}`);
-    renderUnlockedDiamond(member, dischargeTime);
-});
-
-function renderUnlockedDiamond(member, dischargeTime) {
-    const isCountdownComplete = dischargeTime !== null && dischargeTime <= Date.now();
-
-    if (!isCountdownComplete || !isDiamondMemberUnlocked(member.id)) {
+    if (!card || !display) {
         return;
     }
 
-    const card = document.querySelector(`[data-member-id="${member.id}"]`);
+    initMemberTimer(member, {
+        display,
+        container: card,
+        onStatusChange(next) {
+            if (next === STATUS.DISCHARGED) {
+                renderUnlockedDiamond(member, card);
+            }
+        }
+    });
+});
 
-    if (!card || card.querySelector('.member-diamond')) {
+/**
+ * 전역했고 해금까지 마친 멤버의 카드에 다이아몬드를 올린다.
+ * 전 멤버에게 미리 배치하는 작업은 #11에서 다룬다.
+ */
+function renderUnlockedDiamond(member, card) {
+    if (!isDiamondMemberUnlocked(member.id) || card.querySelector('.member-diamond')) {
         return;
     }
 
     const diamond = createDiamondSvg();
+
     diamond.classList.add('member-diamond');
     card.classList.add('has-member-diamond');
     card.append(diamond);
