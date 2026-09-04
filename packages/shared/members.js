@@ -41,7 +41,6 @@ export function toKstMidnight(dateString) {
  * @property {string}      birthDate      'YYYY-MM-DD'. 나이순 정렬 기준.
  * @property {string|null} enlistDate     'YYYY-MM-DD'. 확인 전이면 null.
  * @property {string}      dischargeDate  'YYYY-MM-DD'
- * @property {number}      diamondCell    다이아몬드 SVG에서 배정받은 셀 번호
  * @property {string}      href           허브 카드를 눌렀을 때 이동할 주소
  * @property {boolean}     external       외부 도메인이면 true (우지)
  * @property {Object}      features       멤버별로 켜고 끄는 기능
@@ -59,7 +58,6 @@ export const MEMBERS = [
         birthDate: '1995-10-04',
         enlistDate: '2024-09-26',
         dischargeDate: '2026-06-25',
-        diamondCell: 5,
         href: './sites/jeonghan/index.html',
         external: false,
         features: { comments: false, meals: null, music: null }
@@ -71,7 +69,6 @@ export const MEMBERS = [
         birthDate: '1996-06-15',
         enlistDate: '2025-09-16',
         dischargeDate: '2027-03-15',
-        diamondCell: 8,
         href: './sites/hoshi/index.html',
         external: false,
         features: { comments: false, meals: null, music: null }
@@ -83,7 +80,6 @@ export const MEMBERS = [
         birthDate: '1996-07-17',
         enlistDate: '2025-04-03',
         dischargeDate: '2027-01-02',
-        diamondCell: 6,
         href: './sites/wonwoo/index.html',
         external: false,
         features: { comments: false, meals: null, music: null }
@@ -95,13 +91,40 @@ export const MEMBERS = [
         birthDate: '1996-11-22',
         enlistDate: '2025-09-15',
         dischargeDate: '2027-03-14',
-        diamondCell: 7,
         // 우지는 별도 저장소·별도 도메인으로 운영된다 (jisu-su/woozi-countdown)
         href: 'https://woozi-countdown.pages.dev',
         external: true,
         features: { comments: true, meals: null, music: null }
     }
 ];
+
+/**
+ * 다이아몬드에서 멤버들이 차지하는 첫 셀 번호.
+ * 1~4번은 기본 활성이라 멤버 배정에 쓰지 않는다.
+ */
+export const FIRST_MEMBER_CELL = 5;
+
+/**
+ * 전역일이 빠른 순서. 같은 날 전역이면 연장자가 앞선다.
+ * 다이아몬드가 채워지는 순서이기도 하다.
+ */
+export function getMembersByDischarge() {
+    return [...MEMBERS].sort((a, b) =>
+        a.dischargeDate.localeCompare(b.dischargeDate) || a.birthDate.localeCompare(b.birthDate)
+    );
+}
+
+/**
+ * 멤버 id -> 다이아몬드 셀 번호.
+ *
+ * 손으로 적지 않고 전역일 순서에서 계산한다. 그래야 "먼저 전역한 멤버가
+ * 먼저 채워진다"는 규칙이 멤버를 추가해도 저절로 지켜진다.
+ */
+export function getDiamondCellMap() {
+    return Object.fromEntries(
+        getMembersByDischarge().map((member, index) => [member.id, FIRST_MEMBER_CELL + index])
+    );
+}
 
 /** id로 멤버를 찾는다. 없으면 undefined. */
 export function getMemberById(id) {
@@ -137,7 +160,6 @@ export function formatDateDots(dateString) {
 export function validateMembers(members = MEMBERS) {
     const problems = [];
     const seenIds = new Set();
-    const seenCells = new Set();
 
     members.forEach(member => {
         const at = `[${member.id ?? '(id 없음)'}]`;
@@ -145,11 +167,6 @@ export function validateMembers(members = MEMBERS) {
         if (!member.id) problems.push(`${at} id가 없다`);
         if (seenIds.has(member.id)) problems.push(`${at} id가 중복된다`);
         seenIds.add(member.id);
-
-        if (seenCells.has(member.diamondCell)) {
-            problems.push(`${at} diamondCell ${member.diamondCell}이 다른 멤버와 겹친다`);
-        }
-        seenCells.add(member.diamondCell);
 
         ['birthDate', 'dischargeDate'].forEach(field => {
             if (toKstMidnight(member[field]) === null) {
@@ -168,6 +185,12 @@ export function validateMembers(members = MEMBERS) {
             problems.push(`${at} 입대일이 전역일보다 늦거나 같다`);
         }
     });
+
+    // 다이아몬드 셀은 14개뿐이고 1~4번은 기본 활성이라, 멤버는 최대 10명까지
+    // 배정할 수 있다. 14번은 '전원 전역' 셀로 남겨 9명까지를 권장한다.
+    if (members.length > 14 - FIRST_MEMBER_CELL) {
+        problems.push(`멤버가 ${members.length}명인데 배정 가능한 다이아몬드 셀은 ${14 - FIRST_MEMBER_CELL}개뿐이다`);
+    }
 
     return problems;
 }

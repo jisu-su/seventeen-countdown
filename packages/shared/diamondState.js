@@ -1,14 +1,12 @@
-import { MEMBERS } from './members.js';
+import { getDiamondCellMap } from './members.js';
 
 export const DIAMOND_STORAGE_KEY = 'svt_diamond_unlocked';
 
 /**
  * 멤버 id -> 다이아몬드 셀 번호.
- * 직접 적지 않고 members.js에서 파생시킨다. 멤버를 추가하면 자동으로 따라온다.
+ * 전역일이 빠른 순서대로 5번부터 배정된다. 먼저 전역한 멤버의 칸이 먼저 찬다.
  */
-export const MEMBER_CELL_MAP = Object.fromEntries(
-    MEMBERS.map(member => [member.id, member.diamondCell])
-);
+export const MEMBER_CELL_MAP = getDiamondCellMap();
 
 export const DEFAULT_ACTIVE_CELLS = [1, 2, 3, 4];
 
