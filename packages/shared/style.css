@@ -7,7 +7,9 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body, html { width: 100%; height: 100%; font-family: 'Pretendard', sans-serif; overflow: hidden; }
+/* 허브는 모바일에서 2열 5행이 되어 세로 스크롤이 필요하다.
+   가로 스크롤만 막고 세로는 열어둔다. */
+body, html { width: 100%; min-height: 100%; font-family: 'Pretendard', sans-serif; overflow-x: hidden; }
 
 .main-bg {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -49,8 +51,26 @@ body, html { width: 100%; height: 100%; font-family: 'Pretendard', sans-serif; o
     font-weight: 300; /* 선을 얇게 해서 더 고급스럽게 */
 }
 
-.timer-label { font-size: 2.5rem; font-weight: bold; color: #ffffff; margin-bottom: 20px; opacity: 0.8; }
-.countdown-display { font-size: 6rem; font-weight: 900; color: #ffffff; }
+/* 멤버 상세 페이지의 큰 시계.
+   6rem 고정이던 시절에는 좁은 화면에서 좌우가 잘려 나갔다. vw로 화면 폭에
+   비례시키고 clamp로 위아래를 묶는다. 넓은 화면에서는 종전과 같은 6rem. */
+.timer-label {
+    font-size: clamp(1.1rem, 5vw, 2.5rem);
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 0.5em;
+    opacity: 0.8;
+    text-align: center;
+    padding: 0 4vw;
+}
+
+.countdown-display {
+    font-size: clamp(2rem, 11vw, 6rem);
+    font-weight: 900;
+    color: #ffffff;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
 
 .is-unlockable {
     cursor: pointer;
