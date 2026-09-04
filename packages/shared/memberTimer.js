@@ -11,8 +11,12 @@ import { getCountdownTarget, STATUS, getStatusClass, ALL_STATUS_CLASSES } from '
 import { formatRemaining } from './timer.js';
 import { subscribe } from './ticker.js';
 
-/** 전역 이후 카운트다운 자리에 넣을 기본 문구. 표현은 #9에서 다듬는다. */
-export const DEFAULT_DISCHARGED_TEXT = '전역 완료';
+/**
+ * 전역 이후 카운트다운 자리에 넣을 문구.
+ * 시계가 0에서 멈춘 모습을 그대로 두기로 했다. 바꾸고 싶으면
+ * initMemberTimer의 dischargedText 옵션으로 넘기면 된다.
+ */
+export const DEFAULT_DISCHARGED_TEXT = formatRemaining(0);
 
 /**
  * @param {Object}   member                 members.js의 멤버 객체
