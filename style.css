@@ -127,14 +127,21 @@
     opacity: 1;
 }
 
-/* 전역 완료 — 배경을 한 겹 밝게 올려 복무 중인 칸과 구분한다 */
+/* 전역 완료 — 뒤에 깔린 그라데이션의 색을 빼서 무채색으로 만든다.
+   흰색을 덧씌우면 그냥 밝아질 뿐이지만, backdrop-filter는 배경 자체의
+   채도를 없애 "이 멤버는 끝났다"는 인상을 준다.
+   backdrop-filter를 모르는 브라우저에는 아래 background만 적용된다. */
 .member-card.is-discharged {
-    background: rgba(255, 255, 255, 0.16);
+    background: rgba(245, 245, 245, 0.14);
+    backdrop-filter: grayscale(0.9) brightness(1.06);
+    -webkit-backdrop-filter: grayscale(0.9) brightness(1.06);
 }
 
 .member-card.is-discharged:hover,
 .member-card.is-discharged:focus-visible {
-    background: rgba(255, 255, 255, 0.24);
+    background: rgba(245, 245, 245, 0.2);
+    backdrop-filter: grayscale(0.55) brightness(1.1);
+    -webkit-backdrop-filter: grayscale(0.55) brightness(1.1);
 }
 
 .member-card.is-discharged .card-caption {
@@ -167,18 +174,19 @@
     filter: drop-shadow(0 0 16px rgba(185, 231, 255, 0.55));
 }
 
-/* 10번째 칸 — 그룹 전체 진행도 */
+/* 10번째 칸 — 그룹 전체 진행도.
+   글자가 없는 칸이라 다른 카드만큼 여백을 둘 이유가 없다. 여백을 줄여
+   같은 칸 크기 안에서 다이아몬드를 더 크게 보여준다. */
 .hub-tile--progress {
     background: rgba(255, 255, 255, 0.04);
-    /* 다이아몬드가 칸 높이를 밀어내지 않도록 넘치는 부분은 자른다.
-       실제로는 아래 max-height가 먼저 막는다. */
+    padding: 1cqi;
     min-height: 0;
 }
 
 .progress-diamond {
     /* 칸 너비와 칸 높이 중 작은 쪽이 이긴다. */
-    width: 60%;                    /* 컨테이너 쿼리 단위 미지원 브라우저용 폴백 */
-    width: min(74cqi, 76cqb);
+    width: 78%;                    /* 컨테이너 쿼리 단위 미지원 브라우저용 폴백 */
+    width: min(94cqi, 96cqb);
     height: auto;
     opacity: 0.95;
     filter: drop-shadow(0 0 14px rgba(185, 231, 255, 0.45));
