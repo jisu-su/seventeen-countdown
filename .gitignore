@@ -50,3 +50,6 @@ tmp/
 temp/
 *.tmp
 *.temp
+
+# Claude 가 검증용으로 만든 스크린샷 등 산출물
+Claude outputs/
