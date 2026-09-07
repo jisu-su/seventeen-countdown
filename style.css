@@ -51,7 +51,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 4cqi 2cqi;
+    padding: 3cqi 1cqi;
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
@@ -84,18 +84,20 @@
 .member-card .timer-label {
     position: relative;
     z-index: 2;
-    font-size: clamp(0.7rem, 6cqi, 1.35rem);
+    /* 가장 긴 이름(SEUNGKWAN)이 칸을 넘지 않는 선. 자간까지 합쳐
+       칸 안쪽의 90% 정도를 쓴다. */
+    font-size: clamp(0.74rem, 6.4cqi, 1.45rem);
     font-weight: 700;
-    letter-spacing: 0.12em;
-    margin-bottom: 0.4em;
-    opacity: 0.85;
+    letter-spacing: 0.07em;
+    margin-bottom: 0.35em;
+    opacity: 0.88;
     color: #ffffff;
 }
 
 .member-card .countdown-display {
     position: relative;
     z-index: 2;
-    font-size: clamp(0.8rem, 10.5cqi, 2.3rem);
+    font-size: clamp(0.9rem, 12cqi, 2.8rem);
     font-weight: 800;
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
@@ -105,10 +107,11 @@
 .member-card .card-caption {
     position: relative;
     z-index: 2;
-    margin-top: 0.7em;
-    font-size: clamp(0.62rem, 4.2cqi, 0.95rem);
-    letter-spacing: 0.16em;
-    opacity: 0.62;
+    margin-top: 0.65em;
+    font-size: clamp(0.66rem, 4.8cqi, 1.05rem);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    opacity: 0.78;
     color: #ffffff;
     white-space: nowrap;
 }
@@ -132,16 +135,16 @@
    채도를 없애 "이 멤버는 끝났다"는 인상을 준다.
    backdrop-filter를 모르는 브라우저에는 아래 background만 적용된다. */
 .member-card.is-discharged {
-    background: rgba(245, 245, 245, 0.14);
-    backdrop-filter: grayscale(0.9) brightness(1.06);
-    -webkit-backdrop-filter: grayscale(0.9) brightness(1.06);
+    background: rgba(245, 245, 245, 0.1);
+    backdrop-filter: grayscale(0.5) brightness(1.05);
+    -webkit-backdrop-filter: grayscale(0.5) brightness(1.05);
 }
 
 .member-card.is-discharged:hover,
 .member-card.is-discharged:focus-visible {
-    background: rgba(245, 245, 245, 0.2);
-    backdrop-filter: grayscale(0.55) brightness(1.1);
-    -webkit-backdrop-filter: grayscale(0.55) brightness(1.1);
+    background: rgba(245, 245, 245, 0.16);
+    backdrop-filter: grayscale(0.2) brightness(1.08);
+    -webkit-backdrop-filter: grayscale(0.2) brightness(1.08);
 }
 
 .member-card.is-discharged .card-caption {
