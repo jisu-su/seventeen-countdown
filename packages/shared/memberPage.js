@@ -12,11 +12,15 @@ import { STATUS } from './memberStatus.js';
 import { initMemberTimer } from './memberTimer.js';
 import { armDiamondUnlock } from './diamondUnlock.js';
 
-/** 상태별 페이지 제목. 시계가 무엇까지 세는지와 일치해야 한다. */
+/**
+ * 상태별 페이지 제목. 멤버 이름 뒤에 붙는다.
+ * 시계가 무엇까지 세는지와 일치해야 한다. 전역 후에는 셀 것이 없으므로
+ * 상태를 보고하는 대신 기다림이 끝났다고 말한다.
+ */
 const LABEL_BY_STATUS = {
     [STATUS.UPCOMING]: 'ENLISTMENT COUNTDOWN',
     [STATUS.SERVING]: 'DISCHARGE COUNTDOWN',
-    [STATUS.DISCHARGED]: 'DISCHARGED'
+    [STATUS.DISCHARGED]: 'IS BACK'
 };
 
 /**
