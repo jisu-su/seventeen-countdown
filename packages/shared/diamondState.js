@@ -48,10 +48,27 @@ export function getUnlockedMembers() {
     return [...new Set(readUnlockedMembers())];
 }
 
+/** 마지막 셀. 멤버 전원이 해금됐을 때만 켜진다. */
+export const ALL_DISCHARGED_CELL = 14;
+
+/** 멤버 전원이 해금됐는지. */
+export function isEveryMemberUnlocked() {
+    const memberIds = Object.keys(MEMBER_CELL_MAP);
+    const unlocked = new Set(getUnlockedMembers());
+
+    return memberIds.length > 0 && memberIds.every(id => unlocked.has(id));
+}
+
 export function getActiveDiamondCells() {
     const unlockedCells = getUnlockedMembers().map(memberId => MEMBER_CELL_MAP[memberId]);
+    const cells = [...DEFAULT_ACTIVE_CELLS, ...unlockedCells];
 
-    return [...new Set([...DEFAULT_ACTIVE_CELLS, ...unlockedCells])];
+    // 9명이 모두 돌아오면 마지막 한 칸까지 채워져 다이아몬드가 완성된다.
+    if (isEveryMemberUnlocked()) {
+        cells.push(ALL_DISCHARGED_CELL);
+    }
+
+    return [...new Set(cells)];
 }
 
 export function unlockDiamondMember(memberId) {

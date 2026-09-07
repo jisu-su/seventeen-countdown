@@ -157,6 +157,41 @@
     padding-top: 7cqi;
 }
 
+/* 잠긴 다이아몬드 — 아직 해금하지 않은 상태.
+   무엇이 기다리고 있는지 알아볼 정도의 윤곽선만 남긴다. */
+.member-diamond.is-locked {
+    opacity: 0.3;
+    filter: none;
+}
+
+.member-diamond.is-locked .diamond-cell {
+    fill: transparent;
+    stroke-width: 1.5;
+}
+
+/* 전역했는데 아직 해금하지 않은 카드 — 눌러보라는 신호 */
+.member-card.is-awaiting-unlock .member-diamond {
+    opacity: 0.62;
+    animation: awaitingUnlock 2.4s ease-in-out infinite alternate;
+}
+
+.member-card.is-awaiting-unlock:hover .member-diamond,
+.member-card.is-awaiting-unlock:focus-visible .member-diamond {
+    opacity: 0.9;
+}
+
+@keyframes awaitingUnlock {
+    from { filter: drop-shadow(0 0 2px rgba(185, 231, 255, 0.25)); }
+    to   { filter: drop-shadow(0 0 12px rgba(185, 231, 255, 0.7)); }
+}
+
+/* 움직임을 줄여달라고 설정한 사용자에게는 맥동을 끈다. */
+@media (prefers-reduced-motion: reduce) {
+    .member-card.is-awaiting-unlock .member-diamond {
+        animation: none;
+    }
+}
+
 .member-diamond {
     position: absolute;
     top: 62%;
