@@ -1,0 +1,55 @@
+# 의존성
+node_modules/
+
+# Cloudflare Wrangler 로컬 상태/캐시
+# (계정 ID와 로컬 D1 sqlite가 들어가므로 저장소에 올리지 않는다)
+.wrangler/
+
+# 환경 변수 및 비밀값
+.env
+.env.*
+!.env.example
+!.env.sample
+.dev.vars
+.dev.vars.*
+*.local
+
+# 로그
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# 빌드 산출물
+dist/
+build/
+out/
+.vite/
+coverage/
+
+# 캐시
+.cache/
+.parcel-cache/
+.turbo/
+.eslintcache
+
+# 에디터 / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 임시 파일
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Claude 가 검증용으로 만든 스크린샷 등 산출물
+Claude outputs/

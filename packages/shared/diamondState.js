@@ -1,11 +1,13 @@
+import { MEMBERS, getDiamondCellMap } from './members.js';
+import { getMemberStatus, STATUS } from './memberStatus.js';
+
 export const DIAMOND_STORAGE_KEY = 'svt_diamond_unlocked';
 
-export const MEMBER_CELL_MAP = {
-    jeonghan: 5,
-    wonwoo: 6,
-    woozi: 7,
-    hoshi: 8
-};
+/**
+ * 멤버 id -> 다이아몬드 셀 번호.
+ * 전역일이 빠른 순서대로 5번부터 배정된다. 먼저 전역한 멤버의 칸이 먼저 찬다.
+ */
+export const MEMBER_CELL_MAP = getDiamondCellMap();
 
 export const DEFAULT_ACTIVE_CELLS = [1, 2, 3, 4];
 
@@ -47,10 +49,32 @@ export function getUnlockedMembers() {
     return [...new Set(readUnlockedMembers())];
 }
 
-export function getActiveDiamondCells() {
-    const unlockedCells = getUnlockedMembers().map(memberId => MEMBER_CELL_MAP[memberId]);
+/** 마지막 셀. 멤버 전원이 전역했을 때만 켜진다. */
+export const ALL_DISCHARGED_CELL = 14;
 
-    return [...new Set([...DEFAULT_ACTIVE_CELLS, ...unlockedCells])];
+/** 지금까지 전역한 멤버들. */
+export function getDischargedMembers(now = Date.now()) {
+    return MEMBERS.filter(member => getMemberStatus(member, now) === STATUS.DISCHARGED);
+}
+
+/**
+ * 다이아몬드에서 켜져야 할 셀 목록.
+ *
+ * 기준은 "누가 전역했는가"이지 "이 브라우저에서 눌러봤는가"가 아니다.
+ * 해금 기록(localStorage)은 도메인마다 따로 쌓이고 브라우저를 지우면
+ * 사라지는 값이라, 그룹의 진행 상황을 나타내는 데에는 쓸 수 없다.
+ * 정한이 전역했으면 누가 어디서 보든 정한의 칸은 차 있어야 한다.
+ */
+export function getActiveDiamondCells(now = Date.now()) {
+    const dischargedCells = getDischargedMembers(now).map(member => MEMBER_CELL_MAP[member.id]);
+    const cells = [...DEFAULT_ACTIVE_CELLS, ...dischargedCells];
+
+    // 9명이 모두 돌아오면 마지막 한 칸까지 채워져 다이아몬드가 완성된다.
+    if (MEMBERS.length > 0 && dischargedCells.length === MEMBERS.length) {
+        cells.push(ALL_DISCHARGED_CELL);
+    }
+
+    return [...new Set(cells)];
 }
 
 export function unlockDiamondMember(memberId) {

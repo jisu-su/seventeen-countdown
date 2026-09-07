@@ -1,3 +1,3 @@
 import { initMemberPage } from '../../packages/shared/memberPage.js';
 
-initMemberPage('wonwoo');
+initMemberPage('dino');

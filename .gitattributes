@@ -1,0 +1,31 @@
+# 줄바꿈 정규화
+#
+# 저장소에는 항상 LF로 저장하고, 체크아웃 시에도 LF로 내려준다.
+# 이 파일이 없으면 에디터마다 CRLF/LF가 달라져 실제 변경이 없는데도
+# 파일 전체가 "수정됨"으로 잡힌다.
+
+* text=auto eol=lf
+
+# 텍스트로 다뤄야 하는 것
+*.html   text eol=lf
+*.css    text eol=lf
+*.js     text eol=lf
+*.json   text eol=lf
+*.md     text eol=lf
+*.sql    text eol=lf
+*.svg    text eol=lf
+*.toml   text eol=lf
+
+# 바이너리 — 절대 변환하지 않는다
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.gif    binary
+*.webp   binary
+*.ico    binary
+*.woff   binary
+*.woff2  binary
+*.ttf    binary
+*.otf    binary
+*.mp4    binary
+*.sqlite binary
