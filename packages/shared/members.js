@@ -95,6 +95,61 @@ export const MEMBERS = [
         href: 'https://woozi-countdown.pages.dev',
         external: true,
         features: { comments: true, meals: null, music: null }
+    },
+    {
+        id: 'dokyeom',
+        name: 'DOKYEOM',
+        nameKo: '도겸',
+        birthDate: '1997-02-18',
+        enlistDate: '2026-09-08',
+        dischargeDate: '2028-03-07',
+        href: './sites/dokyeom/index.html',
+        external: false,
+        features: { comments: false, meals: null, music: null }
+    },
+    {
+        id: 'mingyu',
+        name: 'MINGYU',
+        nameKo: '민규',
+        birthDate: '1997-04-06',
+        enlistDate: '2026-09-10',
+        dischargeDate: '2028-06-09',
+        href: './sites/mingyu/index.html',
+        external: false,
+        features: { comments: false, meals: null, music: null }
+    },
+    {
+        id: 'seungkwan',
+        name: 'SEUNGKWAN',
+        nameKo: '승관',
+        birthDate: '1998-01-16',
+        enlistDate: '2026-10-26',
+        dischargeDate: '2028-04-25',
+        href: './sites/seungkwan/index.html',
+        external: false,
+        features: { comments: false, meals: null, music: null }
+    },
+    {
+        id: 'vernon',
+        name: 'VERNON',
+        nameKo: '버논',
+        birthDate: '1998-02-18',
+        enlistDate: '2026-08-20',
+        dischargeDate: '2028-05-19',
+        href: './sites/vernon/index.html',
+        external: false,
+        features: { comments: false, meals: null, music: null }
+    },
+    {
+        id: 'dino',
+        name: 'DINO',
+        nameKo: '디노',
+        birthDate: '1999-02-11',
+        enlistDate: '2026-10-26',
+        dischargeDate: '2028-04-25',
+        href: './sites/dino/index.html',
+        external: false,
+        features: { comments: false, meals: null, music: null }
     }
 ];
 

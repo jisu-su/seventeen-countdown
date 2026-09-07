@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 전역일은 members.js가 채운다. 여기엔 바뀌지 않는 이름만 둔다. -->
+    <title>DINO Countdown</title>
+    <link rel="stylesheet" href="../../packages/shared/style.css">
+</head>
+<body>
+
+    <div class="main-bg"></div>
+
+    <a href="../../index.html" class="back-button">
+        <span class="back-icon">←</span>
+    </a>
+
+    <div class="container">
+        <section id="timer-page" class="page active full-screen">
+            <div class="timer-label" data-member-label></div>
+            <div id="clock" class="countdown-display"></div>
+        </section>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>

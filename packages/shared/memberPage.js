@@ -12,6 +12,13 @@ import { STATUS } from './memberStatus.js';
 import { initMemberTimer } from './memberTimer.js';
 import { armDiamondUnlock } from './diamondUnlock.js';
 
+/** 상태별 페이지 제목. 시계가 무엇까지 세는지와 일치해야 한다. */
+const LABEL_BY_STATUS = {
+    [STATUS.UPCOMING]: 'ENLISTMENT COUNTDOWN',
+    [STATUS.SERVING]: 'DISCHARGE COUNTDOWN',
+    [STATUS.DISCHARGED]: 'DISCHARGED'
+};
+
 /**
  * 멤버 상세 페이지를 초기화한다.
  * @param {string} memberId members.js에 정의된 멤버 id
@@ -27,10 +34,6 @@ export function initMemberPage(memberId) {
     document.title = `${member.name} Countdown : ${formatDateDots(member.dischargeDate)}`;
 
     const label = document.querySelector('[data-member-label]');
-    if (label) {
-        label.textContent = `${member.name} DISCHARGE COUNTDOWN`;
-    }
-
     const page = document.getElementById('timer-page');
     const display = document.getElementById('clock');
 
@@ -42,6 +45,12 @@ export function initMemberPage(memberId) {
         display,
         container: page,
         onStatusChange(next) {
+            // 라벨이 시계와 같은 것을 가리켜야 한다. 입대 전에는 입대까지를
+            // 세면서 "DISCHARGE COUNTDOWN"이라고 적혀 있으면 거짓말이 된다.
+            if (label) {
+                label.textContent = `${member.name} ${LABEL_BY_STATUS[next]}`;
+            }
+
             // 전역 상태가 되는 순간 해금을 준비한다. 페이지를 열어둔 채로
             // 전역일 자정을 넘겨도 새로고침 없이 걸린다.
             if (next === STATUS.DISCHARGED) {
