@@ -13,12 +13,7 @@ import { getMembersByAge, getMemberById } from './members.js';
 import { STATUS } from './memberStatus.js';
 import { initMemberTimer } from './memberTimer.js';
 import { playDiamondUnlockAnimation } from './diamondUnlock.js';
-import {
-    createDiamondSvg,
-    initDiamondState,
-    isDiamondMemberUnlocked,
-    unlockDiamondMember
-} from './diamondState.js';
+import { createDiamondSvg, initDiamondState, unlockDiamondMember } from './diamondState.js';
 
 /**
  * 카드에 붙는 상태 설명. 카운트다운 숫자가 무엇까지 남은 시간인지
@@ -29,16 +24,6 @@ const STATUS_CAPTION = {
     [STATUS.SERVING]: 'UNTIL DISCHARGE',
     [STATUS.DISCHARGED]: 'DISCHARGED'
 };
-
-/**
- * 아직 전역하지 않은 멤버의 카드에도 다이아몬드를 잠긴 상태로 깔아둘지.
- *
- * true  — 9칸 모두에 흐린 다이아몬드가 보인다. 무엇이 기다리고 있는지
- *         미리 알 수 있지만 화면이 다소 빽빽해진다.
- * false — 전역한 멤버의 카드에만 나타난다. 10번째 칸의 진행도 타일이
- *         전체 상황을 대신 보여준다.
- */
-const SHOW_LOCKED_DIAMOND_ON_ALL_CARDS = true;
 
 function createMemberCard(member) {
     const card = document.createElement('a');
@@ -69,7 +54,6 @@ function createMemberCard(member) {
         container: card,
         onStatusChange(next) {
             caption.textContent = STATUS_CAPTION[next] ?? '';
-            syncMemberDiamond(member, card, next);
         }
     });
 
@@ -77,45 +61,12 @@ function createMemberCard(member) {
 }
 
 /**
- * 카드의 다이아몬드를 현재 상태에 맞춘다.
- *
- * 잠김   — 아직 해금하지 않음. 흐린 윤곽선만 보인다.
- * 해금됨 — 셀이 채워지고 빛난다.
- * 전역했는데 아직 해금하지 않았으면 카드에 눌러보라는 신호를 준다.
- */
-function syncMemberDiamond(member, card, status) {
-    const unlocked = isDiamondMemberUnlocked(member.id);
-    const shouldShow = unlocked
-        || status === STATUS.DISCHARGED
-        || SHOW_LOCKED_DIAMOND_ON_ALL_CARDS;
-
-    card.classList.toggle('is-awaiting-unlock', status === STATUS.DISCHARGED && !unlocked);
-
-    if (!shouldShow) {
-        card.querySelector('.member-diamond')?.remove();
-        card.classList.remove('has-member-diamond');
-        return;
-    }
-
-    let diamond = card.querySelector('.member-diamond');
-
-    if (!diamond) {
-        diamond = createDiamondSvg();
-        diamond.classList.add('member-diamond');
-        card.classList.add('has-member-diamond');
-        card.append(diamond);
-    }
-
-    diamond.classList.toggle('is-locked', !unlocked);
-
-    if (unlocked) {
-        initDiamondState(diamond);
-    }
-}
-
-/**
  * 10번째 칸. 지금까지 전역한 멤버 수만큼 셀이 채워진 전체 다이아몬드를 보여준다.
  * 멤버 카드가 아니므로 클릭해도 이동하지 않는다.
+ *
+ * 멤버 카드에는 다이아몬드를 그리지 않는다. 아홉 장에 같은 그림이 반복되면
+ * 산만하고, 카드 안에서 글자가 밀려 올라간다. 그룹의 진행 상황은 이 칸
+ * 하나가 맡는다.
  */
 function createProgressTile() {
     const tile = document.createElement('div');

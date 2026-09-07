@@ -105,10 +105,10 @@
 .member-card .card-caption {
     position: relative;
     z-index: 2;
-    margin-top: 0.6em;
-    font-size: clamp(0.5rem, 3cqi, 0.7rem);
-    letter-spacing: 0.18em;
-    opacity: 0.55;
+    margin-top: 0.7em;
+    font-size: clamp(0.62rem, 4.2cqi, 0.95rem);
+    letter-spacing: 0.16em;
+    opacity: 0.62;
     color: #ffffff;
     white-space: nowrap;
 }
@@ -151,63 +151,6 @@
 /* --------------------------------------------------------------------------
    다이아몬드
    -------------------------------------------------------------------------- */
-
-.member-card.has-member-diamond {
-    justify-content: flex-start;
-    padding-top: 7cqi;
-}
-
-/* 잠긴 다이아몬드 — 아직 해금하지 않은 상태.
-   무엇이 기다리고 있는지 알아볼 정도의 윤곽선만 남긴다. */
-.member-diamond.is-locked {
-    opacity: 0.3;
-    filter: none;
-}
-
-.member-diamond.is-locked .diamond-cell {
-    fill: transparent;
-    stroke-width: 1.5;
-}
-
-/* 전역했는데 아직 해금하지 않은 카드 — 눌러보라는 신호 */
-.member-card.is-awaiting-unlock .member-diamond {
-    opacity: 0.62;
-    animation: awaitingUnlock 2.4s ease-in-out infinite alternate;
-}
-
-.member-card.is-awaiting-unlock:hover .member-diamond,
-.member-card.is-awaiting-unlock:focus-visible .member-diamond {
-    opacity: 0.9;
-}
-
-@keyframes awaitingUnlock {
-    from { filter: drop-shadow(0 0 2px rgba(185, 231, 255, 0.25)); }
-    to   { filter: drop-shadow(0 0 12px rgba(185, 231, 255, 0.7)); }
-}
-
-/* 움직임을 줄여달라고 설정한 사용자에게는 맥동을 끈다. */
-@media (prefers-reduced-motion: reduce) {
-    .member-card.is-awaiting-unlock .member-diamond {
-        animation: none;
-    }
-}
-
-.member-diamond {
-    position: absolute;
-    top: 62%;
-    left: 50%;
-    /* 칸 너비와 칸 높이 중 작은 쪽이 이긴다. 한쪽만 기준으로 삼으면
-       낮고 넓은 칸이나 높고 좁은 칸에서 상자와 그림이 어긋난다.
-       다이아몬드는 정사각 viewBox라 폭만 정하면 높이는 따라온다. */
-    width: 50%;                    /* 컨테이너 쿼리 단위 미지원 브라우저용 폴백 */
-    width: min(62cqi, 56cqb);
-    height: auto;
-    transform: translate(-50%, -50%);
-    z-index: 1;
-    opacity: 0.92;
-    pointer-events: none;
-    filter: drop-shadow(0 0 16px rgba(185, 231, 255, 0.55));
-}
 
 /* 10번째 칸 — 그룹 전체 진행도.
    글자가 없는 칸이라 다른 카드만큼 여백을 둘 이유가 없다. 여백을 줄여
